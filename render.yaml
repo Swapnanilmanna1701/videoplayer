@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: pulse-backend
+    runtime: node
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: UPLOAD_DIR
+        value: uploads
+      - key: MAX_FILE_SIZE
+        value: "524288000"
+      - key: FRONTEND_URL
+        sync: false
+      - key: CDN_ENABLED
+        value: "false"
+      - key: BASE_URL
+        sync: false

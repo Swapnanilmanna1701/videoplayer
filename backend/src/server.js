@@ -76,7 +76,7 @@ const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   await connectDB();
-  server.listen(PORT, () => {
+  server.listen(PORT, '0.0.0.0', () => {
     console.log(`Pulse server running on port ${PORT}`);
     console.log(`Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
     console.log(`CDN: ${cdn.isEnabled() ? 'Enabled (' + process.env.CDN_BASE_URL + ')' : 'Disabled'}`);
