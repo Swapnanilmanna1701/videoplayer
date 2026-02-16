@@ -1,5 +1,14 @@
 require('dotenv').config();
 
+// Validate required environment variables before starting
+const requiredEnvVars = ['MONGODB_URI', 'JWT_SECRET'];
+const missingVars = requiredEnvVars.filter((key) => !process.env[key]);
+if (missingVars.length > 0) {
+  console.error(`Missing required environment variables: ${missingVars.join(', ')}`);
+  console.error('Set these in your Render dashboard or .env file.');
+  process.exit(1);
+}
+
 const express = require('express');
 const http = require('http');
 const cors = require('cors');

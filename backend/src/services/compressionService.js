@@ -1,8 +1,21 @@
-const ffmpeg = require('fluent-ffmpeg');
 const path = require('path');
 const fs = require('fs');
+const { execSync } = require('child_process');
 const { getIO } = require('../config/socket');
 const Video = require('../models/Video');
+
+// Check if ffmpeg is available on the system
+let ffmpeg;
+let ffmpegAvailable = false;
+try {
+  ffmpeg = require('fluent-ffmpeg');
+  // Verify the ffmpeg binary is actually accessible
+  execSync('ffmpeg -version', { stdio: 'ignore' });
+  ffmpegAvailable = true;
+  console.log('FFmpeg detected: video compression enabled');
+} catch {
+  console.warn('FFmpeg not found on system: video compression will be skipped');
+}
 
 /**
  * Video compression quality presets.
@@ -128,6 +141,19 @@ const compressVideo = async (videoId, userId) => {
   const io = getIO();
   const room = `user_${userId}`;
   const uploadsDir = process.env.UPLOAD_DIR || 'uploads';
+
+  // Early exit if ffmpeg is not available on the system
+  if (!ffmpegAvailable) {
+    console.warn(`Compression skipped for video ${videoId}: FFmpeg not installed`);
+    await Video.findByIdAndUpdate(videoId, {
+      'compression.status': 'skipped',
+    });
+    io.to(room).emit('compression:skipped', {
+      videoId,
+      reason: 'FFmpeg not available on server',
+    });
+    return;
+  }
 
   try {
     const video = await Video.findById(videoId);
