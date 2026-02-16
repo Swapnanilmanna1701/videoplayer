@@ -1073,3 +1073,286 @@ button {
     font-size: 1.35rem;
   }
 }
+
+/* ============================================================
+   Performance Optimization Styles
+   Video Compression, Caching, CDN Integration
+   ============================================================ */
+
+/* --- Quality Selector (Video Player) --- */
+.modal-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.quality-selector {
+  position: relative;
+}
+
+.quality-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: auto;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.8rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  background: var(--color-bg-alt);
+}
+.quality-btn:hover {
+  border-color: var(--color-primary);
+}
+
+.quality-current {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+}
+
+.quality-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.35rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  min-width: 220px;
+  box-shadow: var(--shadow);
+  z-index: 1100;
+  overflow: hidden;
+}
+
+.quality-menu-header {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.quality-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition);
+  border-radius: 0;
+}
+.quality-option:hover {
+  background: var(--color-surface-hover);
+}
+.quality-option.active {
+  background: rgba(124, 58, 237, 0.1);
+  color: var(--color-primary);
+}
+.quality-option.active .quality-label {
+  font-weight: 600;
+}
+
+.quality-label {
+  flex: 1;
+}
+
+.quality-resolution {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.quality-size {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  background: var(--color-bg-alt);
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+}
+
+/* --- Compression Indicator on Video Card --- */
+.compression-indicator {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  background: rgba(124, 58, 237, 0.9);
+  color: #fff;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+.compression-indicator.compressing {
+  background: rgba(245, 158, 11, 0.9);
+}
+
+.badge-optimised {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.compression-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+.compression-badge.compressing {
+  color: var(--color-warning);
+}
+
+/* --- Performance Optimization Dashboard (Admin) --- */
+.optimization-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.optimization-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+}
+
+.optimization-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+.optimization-header svg {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+.optimization-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  flex: 1;
+}
+.optimization-header .btn {
+  flex-shrink: 0;
+}
+
+.optimization-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.opt-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.opt-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.opt-value.cdn-enabled { color: var(--color-success); }
+.opt-value.cdn-disabled { color: var(--color-text-muted); }
+.opt-value.opt-url {
+  font-size: 0.75rem;
+  word-break: break-all;
+}
+
+.opt-label {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 0.15rem;
+}
+
+.opt-highlight {
+  grid-column: span 2;
+  background: rgba(124, 58, 237, 0.08);
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius);
+}
+.opt-highlight .opt-value { color: var(--color-primary); }
+
+/* --- Cache Tiers (Admin) --- */
+.cache-tiers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cache-tier {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--color-bg-alt);
+  border-radius: var(--radius);
+}
+
+.cache-tier-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.cache-tier-name {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.cache-tier-keys {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+}
+
+.cache-tier-stats {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.cache-hits,
+.cache-misses,
+.cache-rate {
+  font-size: 0.7rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: var(--color-surface);
+}
+
+.cache-hits { color: var(--color-success); }
+.cache-misses { color: var(--color-text-muted); }
+.cache-rate { color: var(--color-warning); }
+.cache-rate.good { color: var(--color-success); }
+
+/* --- Responsive: Optimization Grid --- */
+@media (max-width: 768px) {
+  .optimization-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .optimization-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .quality-menu {
+    right: -1rem;
+    min-width: 180px;
+  }
+}

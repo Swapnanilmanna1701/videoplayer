@@ -61,6 +61,34 @@ const videoSchema = new mongoose.Schema(
       categories: [String],
       analysedAt: { type: Date, default: null },
     },
+    // Video compression variants for adaptive quality streaming
+    compression: {
+      status: {
+        type: String,
+        enum: ['pending', 'compressing', 'completed', 'failed', 'skipped'],
+        default: 'pending',
+      },
+      sourceMetadata: {
+        duration: Number,
+        width: Number,
+        height: Number,
+        codec: String,
+        audioCodec: String,
+        bitrate: Number,
+        size: Number,
+      },
+      variants: [
+        {
+          quality: { type: String }, // e.g. '360p', '480p', '720p', '1080p'
+          filename: { type: String }, // relative path to compressed file
+          resolution: { type: String },
+          bitrate: { type: String },
+          size: { type: Number },
+          label: { type: String },
+        },
+      ],
+      completedAt: { type: Date, default: null },
+    },
     // Custom user-defined category
     category: {
       type: String,

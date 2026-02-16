@@ -1,10 +1,10 @@
-import { Film, Clock, CheckCircle, AlertTriangle, Loader, Trash2, RotateCw } from 'lucide-react';
+import { Film, Clock, CheckCircle, AlertTriangle, Loader, Trash2, RotateCw, Zap } from 'lucide-react';
 
 /**
  * Displays a single video with its metadata, processing status,
- * and sensitivity result. Provides action buttons based on status.
+ * sensitivity result, and compression status. Provides action buttons based on status.
  */
-export default function VideoCard({ video, onPlay, onDelete, onReprocess, canEdit }) {
+export default function VideoCard({ video, onPlay, onDelete, onReprocess, onCompress, canEdit }) {
   const formatSize = (bytes) => {
     if (bytes >= 1073741824) return `${(bytes / 1073741824).toFixed(1)} GB`;
     if (bytes >= 1048576) return `${(bytes / 1048576).toFixed(1)} MB`;
@@ -32,6 +32,9 @@ export default function VideoCard({ video, onPlay, onDelete, onReprocess, canEdi
     pending: { color: 'var(--color-muted)', label: 'Pending' },
   };
 
+  const compressionStatus = video.compression?.status;
+  const variantCount = video.compression?.variants?.length || 0;
+
   const status = statusConfig[video.status] || statusConfig.processing;
   const sensitivity = sensitivityConfig[video.sensitivity] || sensitivityConfig.pending;
   const StatusIcon = status.icon;
@@ -54,6 +57,18 @@ export default function VideoCard({ video, onPlay, onDelete, onReprocess, canEdi
         {video.status === 'completed' && (
           <div className="play-overlay">
             <span>Play</span>
+          </div>
+        )}
+        {/* Compression indicator overlay */}
+        {compressionStatus === 'completed' && variantCount > 0 && (
+          <div className="compression-indicator" title={`${variantCount} quality variants available`}>
+            <Zap size={12} />
+            {variantCount}
+          </div>
+        )}
+        {compressionStatus === 'compressing' && (
+          <div className="compression-indicator compressing" title="Compressing...">
+            <Loader size={12} className="spin" />
           </div>
         )}
       </div>
@@ -81,6 +96,12 @@ export default function VideoCard({ video, onPlay, onDelete, onReprocess, canEdi
           <span className="badge" style={{ background: sensitivity.color }}>
             {sensitivity.label}
           </span>
+          {compressionStatus === 'completed' && (
+            <span className="badge badge-optimised">
+              <Zap size={10} />
+              Optimised
+            </span>
+          )}
         </div>
 
         {canEdit && (
@@ -101,6 +122,15 @@ export default function VideoCard({ video, onPlay, onDelete, onReprocess, canEdi
                 title="Retry"
               >
                 <RotateCw size={14} />
+              </button>
+            )}
+            {video.status === 'completed' && compressionStatus !== 'compressing' && compressionStatus !== 'completed' && (
+              <button
+                className="btn btn-sm btn-outline"
+                onClick={() => onCompress?.(video._id)}
+                title="Compress video"
+              >
+                <Zap size={14} />
               </button>
             )}
             <button

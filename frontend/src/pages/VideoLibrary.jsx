@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 
 /**
  * Video library page with filtering, search, pagination,
- * and integrated video playback.
+ * compression controls, and integrated video playback with quality selection.
  */
 export default function VideoLibrary() {
   const { user } = useAuth();
@@ -93,13 +93,22 @@ export default function VideoLibrary() {
     }
   };
 
+  const handleCompress = async (videoId) => {
+    try {
+      await videoAPI.compress(videoId);
+      toast.success('Compression started. Quality variants will be available shortly.');
+      fetchVideos(pagination.page);
+    } catch (err) {
+      toast.error(err.response?.data?.error || 'Failed to start compression.');
+    }
+  };
+
   const handlePlay = (video) => {
     setPlayingVideo(video);
   };
 
   const getStreamUrl = (video) => {
-    const token = localStorage.getItem('pulse_token');
-    return `http://localhost:5000/api/videos/${video._id}/stream?token=${token}`;
+    return videoAPI.streamUrl(video._id);
   };
 
   return (
@@ -181,6 +190,7 @@ export default function VideoLibrary() {
               onPlay={handlePlay}
               onDelete={handleDelete}
               onReprocess={handleReprocess}
+              onCompress={handleCompress}
               canEdit={canEdit}
             />
           ))}
