@@ -12,6 +12,8 @@ if (missingVars.length > 0) {
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const compression = require('compression');
 const path = require('path');
 const fs = require('fs');
@@ -39,6 +41,24 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 // Middleware
+
+// Security: disable X-Powered-By header
+app.disable('x-powered-by');
+
+// Security: set standard security headers via helmet
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' }, // Allow cross-origin video streaming
+  contentSecurityPolicy: false, // API-only server; CSP not needed
+}));
+
+// Security: rate limit auth endpoints to prevent brute-force attacks
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20, // max 20 requests per window per IP
+  message: { error: 'Too many requests. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 // HTTP compression for API responses (skip video streams - they have their own encoding)
 app.use(compression({
@@ -92,7 +112,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // API routes
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/videos', videoRoutes);
 app.use('/api/admin', adminRoutes);
 

@@ -33,7 +33,10 @@ const isEnabled = () => {
  * @returns {string} - HMAC signature
  */
 const generateSignature = (resourcePath, expiresAt) => {
-  const secret = process.env.CDN_SECRET_KEY || 'default-cdn-secret';
+  const secret = process.env.CDN_SECRET_KEY;
+  if (!secret) {
+    throw new Error('CDN_SECRET_KEY environment variable is required when CDN is enabled');
+  }
   const data = `${resourcePath}:${expiresAt}`;
   return crypto.createHmac('sha256', secret).update(data).digest('hex');
 };
