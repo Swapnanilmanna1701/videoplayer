@@ -51,8 +51,27 @@ app.use(compression({
   threshold: 1024, // Only compress responses > 1KB
 }));
 
+// Build allowed origins list for CORS
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+];
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+// Also allow any Vercel preview deployment URLs
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    if (
+      allowedOrigins.includes(origin) ||
+      origin.endsWith('.vercel.app')
+    ) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
   exposedHeaders: ['ETag', 'X-Cache', 'Cache-Control'],
 }));
